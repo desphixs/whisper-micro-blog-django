@@ -79,6 +79,56 @@
             <p class="text-zinc-500 text-sm">Explore real-time whispers, advice, and updates from members of our developer community.</p>
         </div>
 
+        <!-- The New Whisper Submission Form Card -->
+        <!-- Analogy: This form is like a mailbox slot on our community board. -->
+        <!-- You write a note (message), seal it with an envelope (CSRF security token), and drop it into the slot. -->
+        <!-- Once submitted, it instantly flies into the database and gets displayed for the whole community. -->
+        <div class="w-full bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-sm">
+            <!-- Form Tag: Serves as the envelope carrier that sends data to our Django server. -->
+            <!-- - action=".": Tells the browser to submit the form data to the exact same URL we are currently viewing. -->
+            <!-- - method="POST": Specifies that we are pushing/posting new data to the server, rather than just requesting to view it. -->
+            <form action="." method="POST" class="space-y-4">
+                <!-- Django's CSRF token acts like a secure digital stamp or wax seal on an envelope. -->
+                <!-- It proves to Django that this form was loaded directly from our site and is not a spoof or hijack attempt! -->
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <!-- Label for the textarea which improves accessibility and serves as the visual prompt header -->
+                    <label for="content" class="block text-[11px] font-extrabold uppercase tracking-wider text-zinc-400">
+                        <i class="fa-regular fa-comment mr-1 text-zinc-400"></i> Share a new Whisper
+                    </label>
+                    
+                    <!-- Textarea input field for typing the message content -->
+                    <!-- Analogy: A blank canvas page. It has focus ring animation shadows that dynamically glow as you click it -->
+                    <!-- to indicate active editing status. -->
+                    <!-- - name="content": The identifier Django uses to extract this text inside the views.py file. -->
+                    <!-- - id="content": Used by browser accessibility features and labels. -->
+                    <!-- - required: A browser-level validator that stops submissions of empty texts. -->
+                    <textarea 
+                        name="content" 
+                        id="content" 
+                        rows="3" 
+                        required 
+                        placeholder="What's your secret developer whisper today? Type it here..."
+                        class="w-full bg-zinc-50/50 border border-zinc-200/80 focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 rounded-xl px-4 py-3 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none transition duration-150 ease-in-out resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Submit Button Bar -->
+                <!-- Analogy: The delivery button. It triggers the form post submission when clicked. -->
+                <!-- We styled it with an sleek dark hover glow effect, a paper-plane icon, and a loading/active transition. -->
+                <div class="flex justify-end">
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center space-x-2 py-2 px-5 bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-950 text-white font-bold rounded-xl text-xs transition duration-150 shadow-md hover:shadow-lg hover:-translate-y-0.5 transform cursor-pointer"
+                    >
+                        <i class="fa-regular fa-paper-plane text-xs"></i>
+                        <span>Publish Whisper</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
         <!-- The List of Messages -->
         <div class="space-y-6">
             <!-- Django Template tag: 'for' loop acts like a conveyor belt. -->
