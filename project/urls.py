@@ -47,4 +47,8 @@ urlpatterns = [
     # we allow routes defined in accounts/urls.py (like 'register/') to be accessed
     # directly at the root level (e.g., 'http://127.0.0.1:8000/register/').
     path('', include('accounts.urls')),
+    # We include our feed app urls.py. By passing an empty string '' as the prefix,
+    # we allow routes defined in feed/urls.py (like 'timeline/') to be accessed
+    # directly at the root level (e.g., 'http://127.0.0.1:8000/timeline/').
+    path('', include('feed.urls')),
 ]

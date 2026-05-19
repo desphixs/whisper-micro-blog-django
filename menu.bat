@@ -10,7 +10,8 @@ echo 2. Run Server
 echo 3. Make Migrations and Migrate
 echo 4. Open Admin
 echo 5. Update requirements.txt
-echo 6. Exit
+echo 6. Deactivate venv
+echo 7. Exit
 echo ==========================================
 
 set /p choice="Choose option: "
@@ -47,7 +48,19 @@ if "%choice%"=="5" (
     exit /b
 )
 
+
 if "%choice%"=="6" (
+    if exist venv\Scripts\activate.bat (
+        call venv\Scripts\deactivate.bat
+        echo Virtual environment deactivated!
+    ) else (
+        echo Error: venv folder not found!
+    )
+    exit /b
+)
+
+
+if "%choice%"=="7" (
     exit /b
 )
 

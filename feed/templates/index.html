@@ -1,0 +1,148 @@
+<!-- We define the standard HTML5 document type skeleton so the browser knows how to parse modern web pages -->
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Descriptive title for optimal browser tab recognition and premium SEO standards -->
+    <title>Global Timeline - Whisper</title>
+    <!-- We load Tailwind CSS CDN to style our page with utility classes without writing custom CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- We load Font Awesome CDN for highly descriptive modern UI icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- We load a beautiful, modern Google Font called Plus Jakarta Sans for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Setting the default font to Plus Jakarta Sans for the entire page to give it a premium, sleek feel */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full bg-zinc-50 text-zinc-900 flex flex-col justify-between relative overflow-x-hidden min-h-screen">
+    <!-- Background subtle neon glow circles to add a premium, modern aesthetic depth -->
+    <div class="absolute top-10 left-10 w-96 h-96 bg-zinc-200/50 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-zinc-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <!-- Analogy: The dashboard's navigation bar is like the dashboard panel of a spaceship. -->
+    <!-- It gives you global controls to check who is active, navigate home, or eject safely (logout). -->
+    <header class="w-full bg-white/70 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center space-x-2.5 hover:opacity-90 transition duration-150">
+                <div class="flex items-center justify-center w-9 h-9 bg-zinc-900 rounded-lg shadow-sm">
+                    <i class="fa-solid fa-comment-dots text-white text-base"></i>
+                </div>
+                <span class="font-extrabold tracking-tight bg-gradient-to-r from-zinc-950 to-zinc-700 bg-clip-text text-transparent text-lg">
+                    Whisper
+                </span>
+            </a>
+
+            <!-- Dynamic Authentication Buttons inside the Navigation bar -->
+            <div class="flex items-center space-x-4">
+                <!-- Displays the currently logged-in user's email with a friendly user icon -->
+                <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider hidden sm:inline-block">
+                    <i class="fa-regular fa-circle-user mr-1.5 text-zinc-600 text-sm"></i> {{ user.email }}
+                </span>
+                <!-- Quick link back to the main homepage -->
+                <a href="/" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    Home
+                </a>
+                <!-- Link to the custom Authify user dashboard -->
+                <a href="/dashboard/" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    Dashboard
+                </a>
+                <!-- Secure sign-out exit door link -->
+                <a href="{% url 'logout' %}" class="py-2 px-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Global Timeline Container -->
+    <!-- Analogy: The timeline is our digital community bulletin board. -->
+    <!-- Everyone can come and read posts left by others, sorted with the fresh ones on top. -->
+    <main class="flex-grow w-full max-w-2xl mx-auto px-6 py-12 relative z-10 space-y-8">
+        
+        <!-- Timeline Header -->
+        <div class="space-y-2">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-zinc-100 border border-zinc-200 rounded-full text-zinc-700 text-[10px] font-extrabold tracking-widest uppercase">
+                <i class="fa-solid fa-globe text-[10px]"></i> <span>Global Feed</span>
+            </div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-zinc-900">
+                The Whispers Timeline
+            </h1>
+            <p class="text-zinc-500 text-sm">Explore real-time whispers, advice, and updates from members of our developer community.</p>
+        </div>
+
+        <!-- The List of Messages -->
+        <div class="space-y-6">
+            <!-- Django Template tag: 'for' loop acts like a conveyor belt. -->
+            <!-- It takes our list of messages and loops through them one by one, rendering each card. -->
+            {% for message in messages %}
+                <!-- Single Message Card -->
+                <article class="w-full bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
+                    
+                    <!-- Message Card Header (Author and Date Info) -->
+                    <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
+                        <div class="flex items-center space-x-3">
+                            <!-- Display a placeholder user initial avatar -->
+                            <div class="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold text-xs">
+                                {{ message.author.username|slice:":1"|upper }}
+                            </div>
+                            <div>
+                                <!-- Display the author's display handle name -->
+                                <h3 class="text-sm font-bold text-zinc-900 hover:text-zinc-600 transition duration-150 cursor-pointer">
+                                    @{{ message.author.username }}
+                                </h3>
+                                <!-- Display the email address as subtext -->
+                                <p class="text-[10px] text-zinc-400 font-semibold">{{ message.author.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Stamped post creation time showing how long ago the post was created -->
+                        <span class="text-[10px] text-zinc-400 font-bold bg-zinc-50 border border-zinc-200/50 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            <i class="fa-regular fa-clock mr-1 text-[9px]"></i> {{ message.created_at|timesince }} ago
+                        </span>
+                    </div>
+
+                    <!-- Message Body Content -->
+                    <div class="text-zinc-700 text-sm font-medium leading-relaxed break-words">
+                        {{ message.content }}
+                    </div>
+
+                    <!-- Actions Bar (Placeholder edit/delete buttons for subsequent tasks) -->
+                    <div class="flex items-center justify-end space-x-2 pt-1 border-t border-zinc-100/60">
+                        <!-- We show custom action options to users. In future tasks, these will be protected by author validations. -->
+                        <span class="text-[11px] text-zinc-400 font-semibold italic">Message secured</span>
+                    </div>
+
+                </article>
+            {% empty %}
+                <!-- Fallback view if the database conveyor belt has no elements (list is empty) -->
+                <div class="w-full bg-white border border-zinc-200/80 rounded-2xl p-12 text-center shadow-sm space-y-4">
+                    <div class="flex items-center justify-center w-12 h-12 bg-zinc-100 rounded-full mx-auto">
+                        <i class="fa-solid fa-box-open text-zinc-400 text-lg"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="font-bold text-zinc-900 text-base">No whispers yet</h3>
+                        <p class="text-zinc-500 text-xs">The timeline is silent. Be the first one to start the conversation!</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-zinc-200/80 bg-white/40 py-6 text-center relative z-10 mt-12">
+        <p class="text-zinc-500 text-xs font-semibold">
+            &copy; 2026 Whisper Community. Made with passion & pure engineering.
+        </p>
+    </footer>
+</body>
+</html>
