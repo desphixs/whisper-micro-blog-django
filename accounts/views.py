@@ -168,13 +168,33 @@ def login_user(request):
 #    to the lobby reception desk (redirects them straight to the Login page!).
 # ==============================================================================
 
+# We import the Message database model from our feed application's models file.
+# Analogy: This is like having the clerk in the accounts department reach over to the feed department's
+# cabinet room to look up what secret whispers this member has written on the community bulletin board.
+from feed.models import Message
+
 # We place the bouncer decorator directly above our dashboard view function.
 # This single line protects the entire view from anonymous guest visits.
 @login_required
 def dashboard_view(request):
+    # Fetch all message objects from our sqlite database where the author column matches
+    # the currently logged-in user session (request.user).
+    # - Message.objects.filter: this is Django ORM's way of executing a SQL "SELECT * FROM feed_message WHERE author_id = <id>".
+    # - .order_by('-created_at'): we sort these messages descendingly by creation date so the newest sits at the top.
+    # Analogy: Opening the drawer, pulling out only the notes stamped with this user's claim card,
+    # and stacking them so the fresh paper written 5 minutes ago sits right on top of the pile!
+    messages = Message.objects.filter(author=request.user).order_by('-created_at')
+
+    # We package our queried messages inside the context delivery envelope under the key 'messages'.
+    # This allows the HTML rendering engine to locate and loop through these objects.
+    context = {
+        'messages': messages,
+    }
+
     # If the bouncer lets them pass, request.user will hold the authenticated User object.
-    # We load our protected dashboard template and return it to the logged-in user.
-    return render(request, 'dashboard.html')
+    # We load our protected dashboard template and return it to the logged-in user, passing the context dictionary.
+    return render(request, 'dashboard.html', context)
+
 
 
 # ==============================================================================

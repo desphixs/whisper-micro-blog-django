@@ -145,10 +145,12 @@
                                 {{ message.author.username|slice:":1"|upper }}
                             </div>
                             <div>
-                                <!-- Display the author's display handle name -->
-                                <h3 class="text-sm font-bold text-zinc-900 hover:text-zinc-600 transition duration-150 cursor-pointer">
+                                <!-- Display the author's display handle name as a clickable link -->
+                                <!-- Analogy: Setting up a digital signpost. When a user clicks on the name badge, -->
+                                <!-- we route them straight to their dedicated member profile timeline page. -->
+                                <a href="{% url 'user_profile' message.author.username %}" class="text-sm font-bold text-zinc-900 hover:text-zinc-600 active:text-zinc-800 transition duration-150 cursor-pointer block">
                                     @{{ message.author.username }}
-                                </h3>
+                                </a>
                                 <!-- Display the email address as subtext -->
                                 <p class="text-[10px] text-zinc-400 font-semibold">{{ message.author.email }}</p>
                             </div>

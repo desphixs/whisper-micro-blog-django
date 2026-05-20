@@ -38,4 +38,15 @@ urlpatterns = [
     # - '<int:id>' represents the dynamic primary key integer ID of the specific whisper to shred.
     # - We nickname this route 'delete_message' so that our template buttons can link back here easily.
     path('delete/<int:id>/', views.delete_message, name='delete_message'),
+
+    # We map the URL path 'profile/<str:username>/' directly to our protected user_profile view function.
+    # Analogy: Setting up a dynamic directory slot in our main signpost pointing to a member's display room.
+    # - 'profile/' is the base folder address.
+    # - '<str:username>' tells Django that this segment of the URL holds a dynamic string text
+    #   representing the specific user's nickname handle. Django captures it and forwards it as the
+    #   'username' parameter to our view.
+    # - We name this route 'user_profile' so that our templates can dynamically build clickable links (like
+    #   {% url 'user_profile' message.author.username %}) automatically.
+    path('profile/<str:username>/', views.user_profile, name='user_profile'),
 ]
+

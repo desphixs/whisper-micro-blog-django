@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Authify</title>
-    <!-- We load Tailwind CSS CDN to style our page with utility classes without writing custom CSS -->
+    <!-- Title Tag: Auto-updated with the dynamic profile user's username handle -->
+    <title>@{{ profile_user.username }}'s Profile - Whisper</title>
+    <!-- We load Tailwind CSS CDN to style our page with premium utility classes -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- We load Font Awesome CDN for highly descriptive icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -34,6 +35,7 @@
     </style>
 </head>
 <body class="h-full bg-zinc-50 text-zinc-900 flex flex-col justify-between relative overflow-hidden select-none">
+    
     <!-- Background subtle neon glow circles to add a premium, modern aesthetic depth -->
     <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-zinc-200/60 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-zinc-300/40 rounded-full blur-[120px] pointer-events-none"></div>
@@ -42,26 +44,23 @@
     <header class="w-full bg-white/70 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
             <!-- Brand Logo -->
-            <a href="/" class="flex items-center space-x-2.5">
+            <a href="{% url 'index' %}" class="flex items-center space-x-2.5">
                 <div class="flex items-center justify-center w-9 h-9 bg-zinc-900 rounded-lg shadow-sm">
-                    <i class="fa-solid fa-shield-halved text-white text-base"></i>
+                    <i class="fa-solid fa-microphone-lines text-white text-base"></i>
                 </div>
                 <span class="font-extrabold tracking-tight bg-gradient-to-r from-zinc-950 to-zinc-700 bg-clip-text text-transparent text-lg">
-                    Authify
+                    Whisper
                 </span>
             </a>
 
-            <!-- Dynamic Authentication Buttons inside the Navigation bar -->
-            <div class="flex items-center space-x-4">
-                <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider hidden sm:inline-block">
-                    <i class="fa-regular fa-circle-user mr-1.5 text-zinc-600"></i> {{ user.email }}
-                </span>
-                <a href="/" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
-                    Home
+            <!-- Navigation Buttons inside the bar -->
+            <div class="flex items-center space-x-3">
+                <a href="{% url 'index' %}" class="py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-lg text-xs transition duration-150 shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-house mr-1.5 text-[10px]"></i> Home Feed
                 </a>
-                <!-- We use Django's dynamic url template tag to point to our 'logout' path. -->
-                <!-- Analogy: Rather than writing down a static street address that might change, -->
-                <!-- we ask our signpost mapping database: "Find the route nicknamed 'logout' and insert it here!" -->
+                <a href="{% url 'dashboard' %}" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    My Dashboard
+                </a>
                 <a href="{% url 'logout' %}" class="py-2 px-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
                     <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
                 </a>
@@ -69,81 +68,75 @@
         </div>
     </header>
 
-    <!-- Main Protected Content -->
+    <!-- Main Content Grid -->
     <main class="flex-grow flex items-center justify-center px-6 py-12 relative z-10">
         <div class="w-full max-w-4xl bg-white border border-zinc-200/80 rounded-2xl p-8 shadow-xl space-y-8">
-            <!-- Dashboard Welcome Header -->
+            
+            <!-- Dynamic Profile Welcome Banner Header -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between pb-6 border-b border-zinc-200/80 gap-4">
                 <div>
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 bg-emerald-50 border border-emerald-200/60 rounded-full text-emerald-700 text-[10px] font-extrabold tracking-widest uppercase mb-3">
-                        <i class="fa-solid fa-circle text-[8px] animate-pulse"></i> <span>Secure Session Active</span>
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 bg-zinc-100 border border-zinc-200 rounded-full text-zinc-700 text-[10px] font-extrabold tracking-widest uppercase mb-3">
+                        <i class="fa-solid fa-user-tag text-[8px]"></i> <span>Member Profile</span>
                     </div>
                     <h1 class="text-3xl font-extrabold tracking-tight text-zinc-900 flex items-center">
-                        Welcome Back, {{ user.username }}!
+                        @{{ profile_user.username }}'s Timeline
                     </h1>
-                    <p class="text-zinc-500 text-sm mt-1">Here is the detailed blueprint overview of your custom user account.</p>
+                    <p class="text-zinc-500 text-sm mt-1">Explore all the developer whispers shared by @{{ profile_user.username }}.</p>
                 </div>
-                <!-- We use the dynamic url template tag to direct the user to the secure 'logout' path. -->
-                <a href="{% url 'logout' %}" class="md:self-start py-3 px-5 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-sm transition-all duration-200 shadow-sm flex items-center justify-center">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-2 text-xs"></i> Sign Out
+                <a href="{% url 'index' %}" class="md:self-start py-3 px-5 bg-zinc-100 hover:bg-zinc-200 text-zinc-800 font-bold rounded-xl text-sm transition-all duration-200 shadow-sm flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-arrow-left mr-2 text-xs"></i> Back to Timeline
                 </a>
             </div>
 
-            <!-- Two-Column Profile & Whisper Timeline Layout -->
-            <!-- Analogy: A double-pane window. The left pane shows the passport identity (profile statistics), -->
-            <!-- while the right pane displays their active logs (all whispers they have pinned to the board). -->
+            <!-- Two-Column Profile Info & Whisper Feed -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <!-- Left Column: User Profile Statistics Card -->
+                <!-- Left Column: Profile Card -->
                 <div class="space-y-6">
                     <div class="bg-zinc-50 border border-zinc-200/80 rounded-2xl p-6 shadow-sm flex flex-col items-center text-center space-y-4">
                         <!-- Big Avatar with initials -->
-                        <!-- Analogy: The user's digital portrait badge. -->
                         <div class="flex items-center justify-center w-20 h-20 rounded-full bg-zinc-900 border-4 border-zinc-200 text-white font-extrabold text-2xl shadow-sm">
-                            {{ user.username|slice:":1"|upper }}
+                            {{ profile_user.username|slice:":1"|upper }}
                         </div>
                         
                         <div class="space-y-1">
-                            <h2 class="text-lg font-bold text-zinc-900">@{{ user.username }}</h2>
+                            <h2 class="text-lg font-bold text-zinc-900">@{{ profile_user.username }}</h2>
                             <p class="text-xs text-zinc-500 font-semibold flex items-center justify-center">
-                                <i class="fa-regular fa-envelope mr-1.5 text-zinc-400"></i>{{ user.email }}
+                                <i class="fa-regular fa-envelope mr-1.5 text-zinc-400"></i>{{ profile_user.email }}
                             </p>
                         </div>
                         
                         <div class="w-full border-t border-zinc-200/60 my-2"></div>
                         
-                        <!-- Account Details List -->
+                        <!-- Profile Metadata Details -->
                         <div class="w-full text-left space-y-3 text-xs font-semibold text-zinc-500">
                             <div class="flex justify-between items-center">
                                 <span>Joined Date</span>
-                                <span class="text-zinc-800">{{ user.date_joined|date:"M j, Y" }}</span>
+                                <span class="text-zinc-800">{{ profile_user.date_joined|date:"M j, Y" }}</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span>Total Whispers</span>
-                                <!-- Django length filter: counts the items inside our message box array. -->
+                                <span>Whispers Posted</span>
                                 <span class="px-2.5 py-0.5 bg-zinc-200 text-zinc-800 rounded-full font-bold text-[10px]">{{ messages|length }}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: User's Whispers History Timeline -->
+                <!-- Right Column: Filtered Chronological Whispers Timeline -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
                         <h3 class="text-sm font-bold text-zinc-900 uppercase tracking-wider flex items-center">
-                            <i class="fa-regular fa-message mr-2 text-zinc-600"></i> My Whisper History
+                            <i class="fa-regular fa-message mr-2 text-zinc-600"></i> Whisper Timeline
                         </h3>
                         <span class="text-[10px] text-zinc-400 font-extrabold uppercase tracking-wider">
-                            Showing {{ messages|length }} posts
+                            {{ messages|length }} whispers total
                         </span>
                     </div>
 
-                    <!-- Personal Whisper Loop -->
-                    <!-- Analogy: The personal filing cabinet. We slide open the cabinet drawer and look at ONLY the papers -->
-                    <!-- written by our logged-in user. -->
+                    <!-- Whispers Feed List -->
                     <div class="space-y-4 max-h-[520px] overflow-y-auto pr-2 custom-scrollbar">
                         {% for message in messages %}
-                            <!-- Single Message Card -->
+                            <!-- Single Whisper Card -->
                             <article class="w-full bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4">
                                 <!-- Card Header -->
                                 <div class="flex items-center justify-between border-b border-zinc-100 pb-3">
@@ -166,23 +159,24 @@
                                     {{ message.content }}
                                 </div>
 
-                                <!-- Card Actions -->
-                                <!-- Since this is the user's personal dashboard, every single message rendered here is guaranteed -->
-                                <!-- to be owned by them, so they get the Edit and Delete options immediately! -->
+                                <!-- Card Actions (Edit/Delete options only visible to the true author) -->
                                 <div class="flex items-center justify-between pt-2 border-t border-zinc-100/60">
                                     <span class="text-[11px] text-zinc-400 font-semibold italic">Message secured</span>
-                                    <div class="flex items-center space-x-2">
-                                        <!-- Edit button link -->
-                                        <a href="{% url 'edit_message' message.id %}" class="inline-flex items-center space-x-1.5 py-1.5 px-3 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm cursor-pointer">
-                                            <i class="fa-regular fa-pen-to-square text-[10px]"></i>
-                                            <span>Edit</span>
-                                        </a>
-                                        <!-- Delete button link -->
-                                        <a href="{% url 'delete_message' message.id %}" class="inline-flex items-center space-x-1.5 py-1.5 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm cursor-pointer">
-                                            <i class="fa-regular fa-trash-can text-[10px]"></i>
-                                            <span>Delete</span>
-                                        </a>
-                                    </div>
+                                    
+                                    {% if request.user == message.author %}
+                                        <div class="flex items-center space-x-2">
+                                            <!-- Edit button link -->
+                                            <a href="{% url 'edit_message' message.id %}" class="inline-flex items-center space-x-1.5 py-1.5 px-3 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm cursor-pointer">
+                                                <i class="fa-regular fa-pen-to-square text-[10px]"></i>
+                                                <span>Edit</span>
+                                            </a>
+                                            <!-- Delete button link -->
+                                            <a href="{% url 'delete_message' message.id %}" class="inline-flex items-center space-x-1.5 py-1.5 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm cursor-pointer">
+                                                <i class="fa-regular fa-trash-can text-[10px]"></i>
+                                                <span>Delete</span>
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </article>
                         {% empty %}
@@ -192,14 +186,8 @@
                                     <i class="fa-solid fa-box-open text-zinc-400 text-lg"></i>
                                 </div>
                                 <div class="space-y-1">
-                                    <h4 class="font-bold text-zinc-900 text-sm">No whispers written yet</h4>
-                                    <p class="text-zinc-500 text-xs max-w-sm mx-auto">You haven't posted any secret whispers to the global timeline board.</p>
-                                </div>
-                                <div class="pt-2">
-                                    <a href="{% url 'index' %}" class="inline-flex items-center justify-center space-x-2 py-2 px-4 bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-xl text-xs transition duration-150 shadow-sm">
-                                        <i class="fa-solid fa-plus text-[10px]"></i>
-                                        <span>Create Your First Whisper</span>
-                                    </a>
+                                    <h4 class="font-bold text-zinc-900 text-sm">No whispers yet</h4>
+                                    <p class="text-zinc-500 text-xs max-w-sm mx-auto">@{{ profile_user.username }} has not written any developer whispers yet.</p>
                                 </div>
                             </div>
                         {% endfor %}
@@ -214,7 +202,7 @@
     <!-- Footer -->
     <footer class="w-full border-t border-zinc-200/80 bg-white/40 py-6 text-center relative z-10">
         <p class="text-zinc-500 text-xs font-semibold">
-            &copy; 2026 Authify Project. Built with Django &copy; and pure engineering.
+            &copy; 2026 Whisper App. Designed with premium detail.
         </p>
     </footer>
 </body>

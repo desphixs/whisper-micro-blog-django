@@ -190,3 +190,47 @@ def delete_message(request, id):
     return redirect('index')
 
 
+# We import the get_user_model helper from Django's authentication modules.
+# Analogy: This is like asking our main office receptionist: "Give me the active blueprint pattern
+# for our club's official membership cards." It works dynamically even if the model details shift!
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+# We protect this view with the @login_required decorator.
+# Analogy: The Bouncer at the archive room door. Guests cannot inspect user profiles
+# or their historical timelines without first proving their own membership card login state.
+@login_required
+def user_profile(request, username):
+    """
+    user_profile fetches and displays the public profile and chronological message timeline
+    of a specific community user matching the passed username handle parameter.
+    
+    Analogy: The Dedicated Bulletin Board Panel.
+    1. A member clicks on someone's nickname badge on the public feed board.
+    2. We receive their request containing the specific username nickname.
+    3. The clerk runs to the main user registry cabinet and pulls up their membership card (get_object_or_404). If it doesn't exist, we halt!
+    4. We then search the entire Message file cabinet, filtering out only the notes authored by this specific user.
+    5. We pack the user's details and their filtered whispers inside a delivery box and hand it over to the 'profile.html' template to show a beautiful personal timeline.
+    """
+    
+    # 1. Retrieve the target user profile from the database using their unique username handle.
+    # We query our User model using get_object_or_404. If the user typed an invalid handle (like /profile/nonexistent/),
+    # the server cleanly responds with a 404 Page Not Found error instead of crashing.
+    profile_user = get_object_or_404(User, username=username)
+    
+    # 2. Fetch all secret whispers written by this specific retrieved user.
+    # We filter our Message model table where the 'author' column matches our fetched profile_user object.
+    # We sort them by 'created_at' in descending order (newest first) using '-created_at'.
+    profile_messages = Message.objects.filter(author=profile_user).order_by('-created_at')
+    
+    # 3. Package the profile user details and their messages into our context dictionary envelope.
+    context = {
+        'profile_user': profile_user,
+        'messages': profile_messages,
+    }
+    
+    # 4. Render and return our 'profile.html' template with the packed data context.
+    return render(request, 'profile.html', context)
+
+
+
