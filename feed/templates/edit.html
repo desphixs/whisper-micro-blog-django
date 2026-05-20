@@ -1,0 +1,123 @@
+<!-- We define the standard HTML5 document type skeleton so the browser knows how to parse modern web pages -->
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Descriptive title for optimal browser tab recognition and premium SEO standards -->
+    <title>Edit Whisper - Whisper</title>
+    <!-- We load Tailwind CSS CDN to style our page with utility classes without writing custom CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- We load Font Awesome CDN for highly descriptive modern UI icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- We load a beautiful, modern Google Font called Plus Jakarta Sans for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Setting the default font to Plus Jakarta Sans for the entire page to give it a premium, sleek feel */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+</head>
+<body class="h-full bg-zinc-50 text-zinc-900 flex flex-col justify-between relative overflow-x-hidden min-h-screen">
+    <!-- Background subtle neon glow circles to add a premium, modern aesthetic depth -->
+    <div class="absolute top-10 left-10 w-96 h-96 bg-zinc-200/50 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="absolute bottom-10 right-10 w-96 h-96 bg-zinc-300/30 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <!-- Navigation Header -->
+    <header class="w-full bg-white/70 backdrop-blur-xl border-b border-zinc-200/80 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="/" class="flex items-center space-x-2.5 hover:opacity-90 transition duration-150">
+                <div class="flex items-center justify-center w-9 h-9 bg-zinc-900 rounded-lg shadow-sm">
+                    <i class="fa-solid fa-comment-dots text-white text-base"></i>
+                </div>
+                <span class="font-extrabold tracking-tight bg-gradient-to-r from-zinc-950 to-zinc-700 bg-clip-text text-transparent text-lg">
+                    Whisper
+                </span>
+            </a>
+
+            <!-- Dynamic Navigation Links -->
+            <div class="flex items-center space-x-4">
+                <span class="text-zinc-500 text-xs font-semibold uppercase tracking-wider hidden sm:inline-block">
+                    <i class="fa-regular fa-circle-user mr-1.5 text-zinc-600 text-sm"></i> {{ user.email }}
+                </span>
+                <a href="/" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    Home
+                </a>
+                <a href="/dashboard/" class="py-2 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-800 font-semibold rounded-lg text-xs transition duration-150 shadow-sm">
+                    Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow w-full max-w-2xl mx-auto px-6 py-12 relative z-10 space-y-8 flex flex-col justify-center">
+        
+        <!-- Header Info -->
+        <div class="space-y-2">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 bg-zinc-100 border border-zinc-200 rounded-full text-zinc-700 text-[10px] font-extrabold tracking-widest uppercase">
+                <i class="fa-solid fa-pen-to-square text-[10px]"></i> <span>Secure Editor</span>
+            </div>
+            <h1 class="text-3xl font-extrabold tracking-tight text-zinc-900">
+                Modify Your Whisper
+            </h1>
+            <p class="text-zinc-500 text-sm">Correct typos or refine your thought. Your message details remain secure and encrypted.</p>
+        </div>
+
+        <!-- The Edit Form Card -->
+        <!-- Analogy: The owner's edit room. Only you have the key to this room. You can wipe your previous note clean and write down a fresh one. -->
+        <div class="w-full bg-white border border-zinc-200/80 rounded-2xl p-6 shadow-sm space-y-6">
+            <form action="." method="POST" class="space-y-4">
+                <!-- CSRF Token: Django's digital secure seal for form submissions -->
+                {% csrf_token %}
+                
+                <div class="space-y-2">
+                    <label for="content" class="block text-[11px] font-extrabold uppercase tracking-wider text-zinc-400">
+                        <i class="fa-regular fa-comment mr-1 text-zinc-400"></i> Your Message Content
+                    </label>
+                    
+                    <!-- Textarea pre-filled with the message's current database content -->
+                    <textarea 
+                        name="content" 
+                        id="content" 
+                        rows="4" 
+                        required 
+                        placeholder="Update your secret developer whisper..."
+                        class="w-full bg-zinc-50/50 border border-zinc-200/80 focus:border-zinc-950 focus:ring-1 focus:ring-zinc-950 rounded-xl px-4 py-3 text-sm text-zinc-800 placeholder-zinc-400 focus:outline-none transition duration-150 ease-in-out resize-none"
+                    >{{ message.content }}</textarea>
+                </div>
+
+                <!-- Submit and Cancel Buttons -->
+                <div class="flex items-center justify-end space-x-3 pt-2">
+                    <a 
+                        href="/" 
+                        class="inline-flex items-center justify-center space-x-2 py-2 px-5 bg-white hover:bg-zinc-50 active:bg-zinc-100 border border-zinc-200 text-zinc-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm"
+                    >
+                        Cancel
+                    </a>
+                    
+                    <button 
+                        type="submit" 
+                        class="inline-flex items-center justify-center space-x-2 py-2 px-5 bg-zinc-900 hover:bg-zinc-800 active:bg-zinc-950 text-white font-bold rounded-xl text-xs transition duration-150 shadow-md hover:shadow-lg hover:-translate-y-0.5 transform cursor-pointer"
+                    >
+                        <i class="fa-regular fa-circle-check text-xs"></i>
+                        <span>Save Changes</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-zinc-200/80 bg-white/40 py-6 text-center relative z-10 mt-12">
+        <p class="text-zinc-500 text-xs font-semibold">
+            &copy; 2026 Whisper Community. Made with passion & pure engineering.
+        </p>
+    </footer>
+</body>
+</html>

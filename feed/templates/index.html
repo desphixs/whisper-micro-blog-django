@@ -165,10 +165,23 @@
                         {{ message.content }}
                     </div>
 
-                    <!-- Actions Bar (Placeholder edit/delete buttons for subsequent tasks) -->
-                    <div class="flex items-center justify-end space-x-2 pt-1 border-t border-zinc-100/60">
-                        <!-- We show custom action options to users. In future tasks, these will be protected by author validations. -->
+                    <!-- Actions Bar (Edit/Delete controls) -->
+                    <!-- Analogy: The dashboard of options. While everyone sees 'Message secured', only the authentic owner -->
+                    <!-- of the whisper gets the exclusive keys to modify the message. -->
+                    <div class="flex items-center justify-between pt-2 border-t border-zinc-100/60">
                         <span class="text-[11px] text-zinc-400 font-semibold italic">Message secured</span>
+                        
+                        <!-- Django template tag: 'if' condition acts like a digital authorization check scanner. -->
+                        <!-- It verifies if the currently logged-in user is the physical author of this database message row. -->
+                        {% if request.user == message.author %}
+                            <!-- Edit Button Link: Styled as a sleek, modern outline button with hover active transitions -->
+                            <!-- and Font Awesome edit square icon. -->
+                            <!-- - href="{% url 'edit_message' message.id %}": Routes the owner straight to the edit view for this specific message. -->
+                            <a href="{% url 'edit_message' message.id %}" class="inline-flex items-center space-x-1.5 py-1.5 px-3.5 bg-zinc-50 hover:bg-zinc-100 active:bg-zinc-200 border border-zinc-200 text-zinc-700 font-bold rounded-xl text-xs transition duration-150 shadow-sm cursor-pointer">
+                                <i class="fa-regular fa-pen-to-square text-[10px]"></i>
+                                <span>Edit Whisper</span>
+                            </a>
+                        {% endif %}
                     </div>
 
                 </article>

@@ -24,4 +24,12 @@ urlpatterns = [
     # We give it the name 'index' to serve as our central homepage, so we can refer to it easily
     # in HTML templates or redirect statements using {% url 'index' %}.
     path('', views.timeline_view, name='index'),
+
+    # We map the URL path 'edit/<int:id>/' directly to our protected edit_message view function.
+    # Analogy: This is like assigning a dynamic mailbox extension key.
+    # - '<int:id>' tells Django that this segment of the URL holds a dynamic integer number
+    #   representing the message's primary key ID in the database.
+    # - We name the pattern 'edit_message' so that templates and views can programmatically 
+    #   construct URLs (like reversing or resolving {% url 'edit_message' message.id %}) safely.
+    path('edit/<int:id>/', views.edit_message, name='edit_message'),
 ]

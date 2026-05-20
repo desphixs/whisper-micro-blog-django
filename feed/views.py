@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 # We import the login_required decorator which acts like a VIP room security bouncer.
 # It ensures that only logged-in (authenticated) users can gain access to our timeline page.
 # If an anonymous user tries to sneak in, the bouncer will catch them and politely redirect them
@@ -85,4 +85,67 @@ def timeline_view(request):
     # - and our 'context' delivery box filled with the database messages.
     # Render compiles all of this into pure HTML and sends it back to the user's browser.
     return render(request, 'index.html', context)
+
+
+# We apply the VIP security check bouncer (@login_required) so that only logged-in members can access the editor.
+# If a guest tries to navigate here, the bouncer boots them back to the login gateway.
+@login_required
+def edit_message(request, id):
+    """
+    edit_message allows the true author of a whisper to load a secure editor form
+    and save updates to their whisper content, while locking out anyone else.
+    
+    Analogy: The private safety deposit box.
+    1. A member presents a specific box key (message ID).
+    2. We verify if the signature on the bank account details matches the key holder (author validation).
+    3. If they don't match, we sound the alarm and escort them out of the building (redirect back to feed).
+    4. If they match, they can open the box, wipe the old sheet clean, write their new secrets,
+       and seal the box back up in the vault (POST processing and saving).
+    """
+    
+    # 1. Fetch the specific whisper from the database using our helper shortcut.
+    # We tell Django: "Look inside the 'Message' table and grab the row matching 'id=id'."
+    # If a user tries to edit a message ID that doesn't exist, Django handles it and returns a 404 error page.
+    message = get_object_or_404(Message, id=id)
+    
+    # 2. Security Author Validation Check.
+    # We compare the message author's user ID with the user currently active in the request session.
+    # Analogy: A security guard comparing the ID badge of the person trying to edit the document
+    # against the name listed as the original author. If they don't match, we deny entry!
+    if message.author != request.user:
+        # Immediately eject the unauthorized user and redirect them back to the home global timeline.
+        return redirect('index')
+        
+    # 3. Handling incoming update submissions (POST request).
+    # If the author filled out the form and clicked "Save Changes", request.method is equal to 'POST'.
+    if request.method == 'POST':
+        # Extract the new updated message text from the submission data using the key 'content'.
+        # We run .strip() to clean up any blank spaces.
+        new_content = request.POST.get('content', '').strip()
+        
+        # 4. Validation: Verify that the message is not empty.
+        # We don't want the user to clear out their entire whisper and save a blank note!
+        if new_content:
+            # Overwrite the message's content field with the new text.
+            # Analogy: Erasing the previous text on the whiteboard and writing the new polished sentence.
+            message.content = new_content
+            
+            # Save the updated object state back into our database table rows.
+            # Analogy: Locking the safety deposit box back in the wall so it is permanently stored.
+            message.save()
+            
+            # 5. Redirect back to the timeline page so they can see their updated post.
+            # This also clears the POST submit history so browser refreshes are safe!
+            return redirect('index')
+            
+    # 6. Handling the GET request (displaying the form).
+    # If the user simply clicked "Edit Whisper", it's a GET request.
+    # We must load the edit template and pass our message context so the input textarea is pre-filled.
+    # Analogy: We pack our message object into our custom context delivery box labeled 'message'.
+    context = {
+        'message': message,
+    }
+    
+    # Render the edit template compile, passing our context, and return the visual HTML layout.
+    return render(request, 'edit.html', context)
 
