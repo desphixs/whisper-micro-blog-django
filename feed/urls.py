@@ -32,4 +32,10 @@ urlpatterns = [
     # - We name the pattern 'edit_message' so that templates and views can programmatically 
     #   construct URLs (like reversing or resolving {% url 'edit_message' message.id %}) safely.
     path('edit/<int:id>/', views.edit_message, name='edit_message'),
+
+    # We map the URL path 'delete/<int:id>/' directly to our protected delete_message view function.
+    # Analogy: Setting up a dynamic directory button in our mall signpost pointing to the secure shredder room.
+    # - '<int:id>' represents the dynamic primary key integer ID of the specific whisper to shred.
+    # - We nickname this route 'delete_message' so that our template buttons can link back here easily.
+    path('delete/<int:id>/', views.delete_message, name='delete_message'),
 ]

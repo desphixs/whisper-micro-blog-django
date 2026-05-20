@@ -149,3 +149,44 @@ def edit_message(request, id):
     # Render the edit template compile, passing our context, and return the visual HTML layout.
     return render(request, 'edit.html', context)
 
+
+# We apply our bouncer decorator (@login_required) so that guests cannot access the shredding/deleting room.
+# Only authenticated users with active sessions can perform this task.
+@login_required
+def delete_message(request, id):
+    """
+    delete_message allows the true author of a whisper to permanently shred (delete)
+    their post from our database records, while locking out everyone else.
+    
+    Analogy: The Secure Shredder Room.
+    1. A visitor walks up to the shredder room door carrying a claim tag (message ID).
+    2. The bouncer makes sure they are logged in first.
+    3. The clerk runs to the basement files and retrieves the target folder (get_object_or_404). If it doesn't exist, we halt!
+    4. The security officer compares the user's identity badge against the signature of the document's true author (message.author != request.user).
+    5. If there is a mismatch (e.g. someone trying to shred a file they didn't write), the alarm sounds and we escort them back to the main mall lobby (redirect index).
+    6. If the signature matches perfectly, we feed the folder into the heavy-duty paper shredder (message.delete()), removing it from the world forever.
+    7. We then guide them back to the public bulletin board to see that their post has vanished.
+    """
+    
+    # 1. Retrieve the target whisper from our database files.
+    # We query the 'Message' table to find the record matching the dynamic primary key ID.
+    # If no matching record is found in SQLite, get_object_or_404 returns a clean 404 Page Not Found error rather than causing a system crash.
+    message = get_object_or_404(Message, id=id)
+    
+    # 2. Strict Ownership Security Verification Check.
+    # We compare the author field of the fetched message model against the currently active request session user.
+    # This prevents malicious users from executing delete requests on records they do not own by guessing numeric IDs in URLs.
+    if message.author != request.user:
+        # Immediately block the action and redirect the visitor back to the main timeline landing page.
+        return redirect('index')
+        
+    # 3. Permanently erase the whisper.
+    # We invoke the built-in ORM .delete() method on our database object.
+    # Analogy: This triggers an SQL 'DELETE' transaction in our SQLite database, clearing that table row forever.
+    message.delete()
+    
+    # 4. Redirect the author back to the timeline feed page.
+    # This forces a clean visual refresh showing that the deleted message is no longer present.
+    return redirect('index')
+
+
